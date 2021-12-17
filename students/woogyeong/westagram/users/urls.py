@@ -2,6 +2,6 @@
 
 app_name = 'users'
 
-urlaptterns = [
+urlpatterns = [
     
 ]

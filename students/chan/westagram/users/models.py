@@ -7,10 +7,10 @@ class User(models.Model):
     email                    = models.EmailField(max_length=128, unique=True)
     password                 = models.CharField(max_length=200)
     phone_number             = models.CharField(max_length=11)
-    business_number          = models.CharField(max_length=50, blank=True)
+    business_number          = models.CharField(max_length=50, null=True)
     is_allowing_email_recive = models.BooleanField(default=True)
     is_enterprize            = models.BooleanField(default=True)
-    personal_site            = models.URLField(max_length=1000, blank=True)
+    personal_site            = models.URLField(max_length=1000, null=True)
     created_at               = models.DateField(auto_now_add=True)
     updated_at               = models.DateTimeField(auto_now=True)
 

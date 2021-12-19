@@ -6,7 +6,6 @@ class User(models.Model):
     password     = models.CharField(max_length=256)
     phone_number = models.CharField(max_length=100)
     age          = models.IntegerField(null=True)
-    
     created_at   = models.DateTimeField(auto_now_add=True)
     updated_at   = models.DateTimeField(auto_now=True)
     

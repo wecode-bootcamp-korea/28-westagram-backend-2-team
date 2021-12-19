@@ -13,18 +13,20 @@ class SignUpView(View):
     def post(self, request):
         data = json.loads(request.body)
         
-        def valid_email(email=data['email']):
-            email_regex = r'^[\w+-.]+@[\w]+\.[a-zA-Z0-9.-]+$'
-            valid       = re.search(email_regex, email)
-            if valid:
+        def validate_email(email=data['email']):
+            email_regex      = re.compile(r"^[a-zA-Z]+[!#$%&'*+-/=?^_`(){|}~]*[a-zA-Z0-9]*@[\w]+\.[a-zA-Z0-9-]+[.]*[a-zA-Z0-9]+$")
+            email_validation = email_regex.match(email)
+            
+            if email_validation:
                 return True
             else:
                 return False
         
-        def valid_password(password=data['password']):
-            password_regex = r'([\w!@#$%^&*(),.?\":{}|<>]+){8}'
-            valid          = re.search(password_regex, password)
-            if valid:
+        def validate_password(password=data['password']):
+            password_regex = re.compile(r'([\w!@#$%^&*(),.?\":{}|<>]+){8}')
+            password_valid = password_regex.match(password)
+            
+            if password_valid:
                 return True
             else:
                 return False
@@ -33,11 +35,11 @@ class SignUpView(View):
             if User.objects.filter(email=data['email']).exists():
                 return JsonResponse({'message': 'USER_EXISTS'}, status=409)
             else:
-                if valid_email() == True and valid_password() == True:
+                if validate_email() == True and validate_password() == True:
                     pass
-                elif valid_email() == False:
+                elif validate_email() == False:
                     return JsonResponse({'message': 'INVALID_EMAIL'}, status=409)
-                elif valid_password() == False:
+                elif validate_password() == False:
                     return JsonResponse({'message': 'INVALID_PASSWORD'}, status=409)
                 
                 user = User.objects.create(
@@ -47,6 +49,6 @@ class SignUpView(View):
                     user_id       = data['user_id'],
                     password      = data['password'],
                 )
-                return JsonResponse({'message': "SUCCESS"}, status=201)
+                return JsonResponse({'message': "CREATED"}, status=201)
         except KeyError:
             return JsonResponse({'message': 'KEY_ERROR'}, status=400)

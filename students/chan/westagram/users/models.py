@@ -5,7 +5,7 @@ class User(models.Model):
     name                     = models.CharField(max_length=45)
     email                    = models.EmailField(max_length=128, unique=True)
     password                 = models.CharField(max_length=200)
-    phone_number             = models.CharField(max_length=11)
+    phone_number             = models.CharField(max_length=50)
     business_number          = models.CharField(max_length=50, null=True)
     is_allowing_email_recive = models.BooleanField(default=True)
     is_enterprize            = models.BooleanField(default=True)

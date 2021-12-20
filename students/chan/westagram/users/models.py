@@ -1,7 +1,6 @@
 from django.db        import models
 from django.db.models import Model
 
-# Create your models here.
 class User(models.Model):
     name                     = models.CharField(max_length=45)
     email                    = models.EmailField(max_length=128, unique=True)

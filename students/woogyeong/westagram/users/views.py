@@ -22,13 +22,15 @@ class SignUpView(View):
             
             if User.objects.filter(email=data['email']).exists():
                 return JsonResponse({'message': 'USER_EXISTS'}, status=400)
+            
             User.objects.create(
-                    email         = data['email'],
-                    mobile        = data['mobile'],
-                    user_name     = data['user_name'],
-                    user_id       = data['user_id'],
-                    password      = data['password'],
-                )
-            return JsonResponse({'message': "CREATED"}, status=201)
+                    email     = data['email'],
+                    mobile    = data['mobile'],
+                    user_name = data['user_name'],
+                    user_id   = data['user_id'],
+                    password  = data['password'],
+            )
         except KeyError:
             return JsonResponse({'message': 'KEY_ERROR'}, status=400)
+        else:
+            return JsonResponse({'message': "CREATED"}, status=201)

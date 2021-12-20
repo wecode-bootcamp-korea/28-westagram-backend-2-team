@@ -6,7 +6,7 @@ from django.http  import JsonResponse
 from django.views import View
 
 # 사용자 module (직접 작성한 module)
-from users.models import User
+from users.models     import User
 from users.validators import validate_email, validate_password
 
 class SignUpView(View):

@@ -30,7 +30,7 @@ class SignUpView(View):
                     user_id   = data['user_id'],
                     password  = data['password'],
             )
+            return JsonResponse({'message': "CREATED"}, status=201)
         except KeyError:
             return JsonResponse({'message': 'KEY_ERROR'}, status=400)
-        else:
-            return JsonResponse({'message': "CREATED"}, status=201)
+        

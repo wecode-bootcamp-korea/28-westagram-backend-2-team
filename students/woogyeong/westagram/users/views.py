@@ -40,12 +40,17 @@ class LogInView(View):
         email = data['email']
 
         try:
-            if not User.objects.filter(email=data['email']).exists() or not User.objects.filter(password=data['password']).exists():
-                return JsonResponse({'message': 'INVALID_USER'}, status=401)
-        
             user    = User.objects.get(email=email)
             user_id = user.user_id
-            return JsonResponse({'message': f"SUCCESS! user_id : '{user_id}' successfully logged in"}, status=200)
             
+            if not User.objects.filter(email=data['email']).exists() or not User.objects.filter(password=data['password']).exists():
+                return JsonResponse({'message': 'INVALID_USER'}, status=401)
+            
+            if User.objects.filter(email=data['email'], password=data['password']).count() == 1:
+                return JsonResponse({'message': f"SUCCESS! user_id : '{user_id}' successfully logged in"}, status=200)
+            
+            else:
+                return JsonResponse({'message': '이메일과 비번이 맞지 않습니다.'}, status=400)
+                
         except KeyError:
             return JsonResponse({'message': 'KEY_ERROR'}, status=400)

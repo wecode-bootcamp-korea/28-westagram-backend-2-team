@@ -11,7 +11,6 @@ class UserView(View):
         data = json.loads(request.body)
 
         regex_email    = re.match('^[\w]+@[\w]+\.[\w]+$', data['email'])
-
         regex_password = re.match('^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$', data['password'])
         
         try:

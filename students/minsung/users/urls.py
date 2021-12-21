@@ -5,6 +5,6 @@ from users.views import UserView, LoginView
 app_name = 'users'
 
 urlpatterns = [
-    path('/sign_in', UserView.as_view()),
-    path('/log_in', LoginView.as_view()),
+    path('/signin', UserView.as_view()),
+    path('/login', LoginView.as_view()),
 ]

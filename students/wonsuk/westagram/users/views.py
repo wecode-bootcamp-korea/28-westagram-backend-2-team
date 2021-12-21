@@ -1,4 +1,5 @@
 import json
+from json.decoder import JSONDecodeError
 
 from django.core.exceptions import ValidationError
 from django.http            import JsonResponse
@@ -41,13 +42,10 @@ class LogInView(View):
             email    = user_info['email']
             password = user_info['password']
             
-            if email == "" or password == "":
-                return JsonResponse({"message" : "KEY_ERROR"}, status=400)
-            
             if not User.objects.filter(email=email).exists():
                 return JsonResponse({"message" : "INVALID_USER"}, status=401)
             
-            if password != User.objects.get(email=email).password:
+            if not User.objects.filter(email=email, password=password).exists():
                 return JsonResponse({"message" : "INVALID_USER"}, status=401)
             
             return JsonResponse({'message' : 'SUCCESS'}, status=201)

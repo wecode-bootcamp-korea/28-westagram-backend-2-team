@@ -21,7 +21,7 @@ class SignUpView(View):
                 return JsonResponse({'message': 'Password format is not valid'}, status=400)
             
             if User.objects.filter(email=data['email']).exists():
-                return JsonResponse({'message': 'USER_EXISTS'}, status=400)
+                return JsonResponse({'message': 'USER_EXISTS'}, status=409)
             
             User.objects.create(
                     email     = data['email'],
@@ -34,3 +34,21 @@ class SignUpView(View):
         except KeyError:
             return JsonResponse({'message': 'KEY_ERROR'}, status=400)
         
+class LogInView(View):
+    def post(self, request):
+        data  = json.loads(request.body)
+        email = data['email']
+
+        try:
+            if not User.objects.filter(email=data['email']).exists():
+                return JsonResponse({'message': 'INVALID_USER'}, status=401)
+        
+            if not User.objects.filter(password=data['password']).exists():
+                return JsonResponse({'message': 'INVALID_PASSWORD'}, status=401)
+        
+            user    = User.objects.get(email=email)
+            user_id = user.user_id
+            return JsonResponse({'message': f"SUCCESS! user_id : '{user_id}' successfully logged in"}, status=200)
+            
+        except KeyError:
+            return JsonResponse({'message': 'KEY_ERROR'}, status=400)

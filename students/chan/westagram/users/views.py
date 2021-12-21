@@ -1,12 +1,15 @@
 import json
+
 from django.http      import JsonResponse, request
 from django.views     import View
+
 from users.models     import User
 from users.validators import check_email, check_password
 
 class UsersView(View):
     def post(self, request):
         data = json.loads(request.body)
+
         try:
             if not check_email(data['email']):
                 return JsonResponse({'Message' : 'INVALID_EMAIL'}, status=400)

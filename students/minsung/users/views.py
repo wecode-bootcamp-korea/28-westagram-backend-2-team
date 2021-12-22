@@ -1,11 +1,13 @@
 import json
 import re
 import bcrypt
+import jwt
 
 from django.http   import JsonResponse
 from django.views  import View
 
 from users.models  import User
+from my_settings   import SECRET_KEY
 
 class UserView(View):
     def post(self, request):
@@ -15,6 +17,9 @@ class UserView(View):
         regex_password = re.match('^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$', data['password'])
         
         try:
+            if not data.get('date_of_birth'):
+                raise KeyError
+            
             if not regex_email:
                 return JsonResponse({"message": "INVALID EMAIL"}, status=400)
 

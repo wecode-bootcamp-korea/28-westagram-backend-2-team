@@ -14,8 +14,6 @@ class UsersView(View):
 
         password = data['password']
 
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-
         try:
             if not check_email(data['email']):
                 return JsonResponse({'Message' : 'INVALID_EMAIL'}, status=400)
@@ -25,6 +23,8 @@ class UsersView(View):
 
             if User.objects.filter(email=data['email']).exists():
                 return JsonResponse({'Message' : 'EMAIL_EXISTS'}, status=400)
+
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
             User.objects.create(
                 name         = data['name'],

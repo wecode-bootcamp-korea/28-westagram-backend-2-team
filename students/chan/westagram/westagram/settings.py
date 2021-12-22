@@ -28,7 +28,7 @@ DATABASES  = DATABASES
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-APPEND_SALSH  = False
+APPEND_SLASH  = False
 
 
 # Application definition

@@ -1,4 +1,6 @@
 import json
+import bcrypt
+
 from json.decoder import JSONDecodeError
 
 from django.core.exceptions import ValidationError
@@ -16,13 +18,15 @@ class SignUpView(View):
             email_regex_match(data['email'])
             password_regex_match(data['password'])
             
+            hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode()
+            
             if User.objects.filter(email=data['email']).exists():
                 return JsonResponse({'message' : 'EMAIL_ALREADY_EXISTS'}, status=400)
 
             User.objects.create(
                 username     = data['username'],
                 email        = data['email'],
-                password     = data['password'],
+                password     = hashed_password,
                 phone_number = data['phone_number'],
                 age          = data['age']
             )

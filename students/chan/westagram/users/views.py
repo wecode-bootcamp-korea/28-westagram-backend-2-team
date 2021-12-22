@@ -1,4 +1,5 @@
 import json
+import bcrypt
 from django import views
 
 from django.http      import JsonResponse, request
@@ -10,6 +11,10 @@ from users.validators import check_email, check_password
 class UsersView(View):
     def post(self, request):
         data = json.loads(request.body)
+
+        password = data['password']
+
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
         try:
             if not check_email(data['email']):
@@ -24,7 +29,7 @@ class UsersView(View):
             User.objects.create(
                 name         = data['name'],
                 email        = data['email'],
-                password     = data['password'],
+                password     = hashed_password.decode('utf-8'),
                 phone_number = data['phone_number'],
                 address      = data['address'],
             )

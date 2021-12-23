@@ -1,5 +1,6 @@
 import json
 import re
+import bcrypt
 
 from django.http   import JsonResponse
 from django.views  import View
@@ -13,8 +14,8 @@ class UserView(View):
         regex_email    = re.match('^[\w]+@[\w]+\.[\w]+$', data['email'])
         regex_password = re.match('^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$', data['password'])
         
-        try:
-            if not regex_email:
+        try:            
+            if not regex_email: 
                 return JsonResponse({"message": "INVALID EMAIL"}, status=400)
 
             if not regex_password:
@@ -29,9 +30,9 @@ class UserView(View):
             User.objects.create(
                 username      = data['username'],
                 email         = data['email'],
-                password      = data['password'],
+                password      = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
                 phone_number  = data['phone_number'],
-                date_of_birth = data['date_of_birth']
+                date_of_birth = data.get('date_of_birth', None)
             )
             return JsonResponse({"message": "SUCCESS"}, status=201)
         

@@ -47,12 +47,13 @@ class LogInView(View):
             data     = json.loads(request.body)
             email    = data['email']
             password = data['password']
+            user     = User.objects.get(email=email)
 
             if not User.objects.filter(email=email).exists():
                 return JsonResponse({'Message' : 'INVALID_USER'}, status=401)
 
-            if not bcrypt.checkpw(password.encode('utf-8'),User.objects.filter(email=email).get().password.encode('utf-8')):
-                return JsonResponse({'Message' : 'INVALID_PASSWORD'}, status=401)
+            if not bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+                return JsonResponse({'Message' : 'INVALID_USER'}, status=401)
 
             return JsonResponse({'Message' : 'SUCCESS'}, status=200)
 

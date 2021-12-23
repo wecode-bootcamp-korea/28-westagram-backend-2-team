@@ -8,7 +8,6 @@ from django.views  import View
 from django.conf   import settings
 
 from users.models         import User
-#from django.conf.settings import ALGORITHM, SECRET_KEY
 
 class UserView(View):
     def post(self, request):

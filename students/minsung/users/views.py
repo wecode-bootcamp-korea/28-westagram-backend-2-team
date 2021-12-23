@@ -46,15 +46,18 @@ class LoginView(View):
         data = json.loads(request.body)
         
         try:
-            if not User.objects.filter(email = data["email"]).exists():
+            email    = data["email"]
+            password = data["password"]
+
+            if not User.objects.filter(email=email).exists():
                 return JsonResponse({"message": "INVALID_USER"}, status=401)
 
-            user = User.objects.get(email=data['email'])
+            user = User.objects.get(email=email)
 
-            if not bcrypt.checkpw(data["password"].encode('utf-8'), user.password.encode('utf-8')):
+            if not bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
                 return JsonResponse({"message": "INVALID_USER"}, status=401)
             
-            token = jwt.encode({'user_id': User.objects.get(email=data["email"]).id}, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+            token = jwt.encode({'user_id': User.objects.get(email=email).id}, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
             return JsonResponse({"token": token}, status=200)
 
         except json.JSONDecodeError:

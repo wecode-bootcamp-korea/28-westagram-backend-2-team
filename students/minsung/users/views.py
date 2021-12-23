@@ -14,11 +14,8 @@ class UserView(View):
         regex_email    = re.match('^[\w]+@[\w]+\.[\w]+$', data['email'])
         regex_password = re.match('^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$', data['password'])
         
-        try:
-            if not data.get('date_of_birth'):
-                raise KeyError
-            
-            if not regex_email:
+        try:            
+            if not regex_email: 
                 return JsonResponse({"message": "INVALID EMAIL"}, status=400)
 
             if not regex_password:
@@ -35,7 +32,7 @@ class UserView(View):
                 email         = data['email'],
                 password      = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
                 phone_number  = data['phone_number'],
-                date_of_birth = data['date_of_birth']
+                date_of_birth = data.get('date_of_birth', None)
             )
             return JsonResponse({"message": "SUCCESS"}, status=201)
         

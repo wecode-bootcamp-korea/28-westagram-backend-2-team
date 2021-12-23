@@ -7,7 +7,6 @@ from django.http   import JsonResponse
 from django.views  import View
 
 from users.models  import User
-from my_settings   import SECRET_KEY
 
 class UserView(View):
     def post(self, request):

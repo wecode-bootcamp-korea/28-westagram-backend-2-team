@@ -17,7 +17,7 @@ class SignUpView(View):
         try:
             email     = data['email']
             password  = data['password']
-            hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             
             if not validate_email(email):
                 return JsonResponse({'message': 'Email format is not valid'}, status=400)
@@ -29,8 +29,8 @@ class SignUpView(View):
                 return JsonResponse({'message': 'USER_EXISTS'}, status=409)
             
             User.objects.create(
-                email     = data['email'],
-                password  = hashed_pw,
+                email     = email,
+                password  = hashed_password,
                 mobile    = data['mobile'],
                 user_name = data['user_name'],
                 user_id   = data['user_id'],

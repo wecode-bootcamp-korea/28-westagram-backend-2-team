@@ -1,6 +1,7 @@
 # python built-in module
 import json
 import bcrypt
+import jwt
 
 # 외부 module
 from django.http  import JsonResponse
@@ -9,12 +10,12 @@ from django.views import View
 # 사용자 module (직접 작성한 module)
 from users.models     import User
 from users.validators import validate_email, validate_password
+from westagram.settings    import SECRET_KEY, algorithm
 
 class SignUpView(View):
     def post(self, request):
-        data = json.loads(request.body)
-        
         try:
+            data            = json.loads(request.body)
             email           = data['email']
             password        = data['password']
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -41,21 +42,24 @@ class SignUpView(View):
         
 class LogInView(View):
     def post(self, request):
-        data = json.loads(request.body)
-
         try:
+            data     = json.loads(request.body)
             email    = data['email']
             password = data['password']
             
-            if not User.objects.filter(email=email, password=password).exists():
-                return JsonResponse({'message': 'INVALID_USER'}, status=401)
-            
             user = User.objects.get(email=email)
+            if not bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+                return JsonResponse({'MESSAGE': 'INVALID_USER'}, status=401)
+            token = jwt.encode({'user-id': user.id}, SECRET_KEY, algorithm=algorithm)
             result = {
                 'id'      : user.id,
                 'user_id' : user.user_id,
                 'name'    : user.user_name,
             }
-            return JsonResponse({'result': result}, status=200)
+            return JsonResponse({'result': result, 'token': token}, status=200)
         except KeyError:
-            return JsonResponse({'message': 'KEY_ERROR'}, status=400)
+            return JsonResponse({'MESSAGE': 'KEY_ERROR'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({"MESSAGE": "JSONDecodeError"}, status=404)
+        except User.DoesNotExist:
+            return JsonResponse({'MESSAGE': 'User Does Not Exist'}, status=404)

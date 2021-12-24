@@ -1,5 +1,5 @@
 from pathlib import Path
-from my_settings import DATABASES, SECRET_KEY
+from my_settings import DATABASES, SECRET_KEY, algorithm
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -137,3 +137,5 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
 	#만약 허용해야할 추가적인 헤더키가 있다면?(사용자정의 키) 여기에 추가하면 됩니다.
 )
+
+algorithm = algorithm
